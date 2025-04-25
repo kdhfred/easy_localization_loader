@@ -12,10 +12,11 @@ import 'package:flutter/services.dart';
 class CsvAssetLoader extends AssetLoader {
   CSVParser? csvParser;
   final bool useAutodetect;
+  final CsvSettingsDetector? csvSettingsDetector;
 
   CsvAssetLoader({
-    this.csvParser,
     this.useAutodetect = true,
+    this.csvSettingsDetector,
   });
 
   @override
@@ -25,6 +26,7 @@ class CsvAssetLoader extends AssetLoader {
       csvParser = CSVParser(
         await rootBundle.loadString(path),
         useAutodetect: useAutodetect,
+        csvSettingsDetector: csvSettingsDetector,
       );
     } else {
       log('easy localization loader: CSV parser already loaded, read cache');
