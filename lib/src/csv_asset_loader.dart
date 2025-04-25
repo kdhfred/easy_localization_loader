@@ -46,33 +46,40 @@ class CSVParser {
   final List<List<dynamic>> lines;
   final String? fieldDelimiter;
   final String? eol;
+  final CsvSettingsDetector? csvSettingsDetector;
+
   /// Enables automatic detection of the following
   ///
   /// [eols]: '\r\n' '\n'
   ///
   /// [fieldDelimiters]: ',' '\t'
   ///
+  /// [textDelimiters]: '"' "'" '”'
   /// corresponding arguments must be [null]
   final bool useAutodetect;
+
+  static CsvSettingsDetector defaultCsvSettingsDetector =
+      FirstOccurrenceSettingsDetector(
+    fieldDelimiters: [',', ';', '\t'],
+    textDelimiters: ['"', "'", '”'],
+    textEndDelimiters: ['"', "'", '”'],
+    eols: ['\r\n', '\n'],
+  );
 
   CSVParser(
     this.csvString, {
     this.fieldDelimiter,
     this.eol,
     this.useAutodetect = true,
+    this.csvSettingsDetector,
   }) : lines = CsvToListConverter().convert(
           csvString,
           fieldDelimiter: fieldDelimiter,
           eol: eol,
-          csvSettingsDetector:
-              useAutodetect && fieldDelimiter == null && eol == null
-                  ? FirstOccurrenceSettingsDetector(
-                      fieldDelimiters: [',', ';', '\t'],
-                      textDelimiters: ['"', "'", '”'],
-                      textEndDelimiters: ['"', "'", '”'],
-                      eols: ['\r\n', '\n'],
-                    )
-                  : null,
+          csvSettingsDetector: csvSettingsDetector ??
+              (useAutodetect && fieldDelimiter == null && eol == null
+                  ? defaultCsvSettingsDetector
+                  : null),
         );
 
   List getLanguages() {
