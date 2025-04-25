@@ -14,6 +14,7 @@ class CsvAssetLoader extends AssetLoader {
   final bool useAutodetect;
 
   CsvAssetLoader({
+    this.csvParser,
     this.useAutodetect = true,
   });
 
